@@ -12,15 +12,8 @@ import {
 import { JwtAuthGuard } from '../auth/jwt-auth.guard';
 import type { AuthenticatedRequest } from '../auth/authenticated-request';
 import { UpdateUserDto } from './dto/update-user.dto';
-import { User } from './user.entity';
+import { toPublicUser, type PublicUser } from './public-user';
 import { UsersService } from './users.service';
-
-// Nunca devolver o hash da senha: toda resposta com usuário passa por aqui.
-function semSenha(user: User): Partial<User> {
-  const publico: Partial<User> = { ...user };
-  delete publico.passwordHash;
-  return publico;
-}
 
 @UseGuards(JwtAuthGuard)
 @Controller('users')
@@ -28,26 +21,26 @@ export class UsersController {
   constructor(private readonly usersService: UsersService) {}
 
   @Get()
-  findAll(): Partial<User>[] {
-    return this.usersService.findAll().map(semSenha);
+  findAll(): PublicUser[] {
+    return this.usersService.findAll().map(toPublicUser);
   }
 
   @Get('me')
-  me(@Req() req: AuthenticatedRequest): Partial<User> {
-    return semSenha(this.usersService.findOne(req.user.id));
+  me(@Req() req: AuthenticatedRequest): PublicUser {
+    return toPublicUser(this.usersService.findOne(req.user.id));
   }
 
   @Get(':id')
-  findOne(@Param('id') id: string): Partial<User> {
-    return semSenha(this.usersService.findOne(id));
+  findOne(@Param('id') id: string): PublicUser {
+    return toPublicUser(this.usersService.findOne(id));
   }
 
   @Patch(':id')
   async update(
     @Param('id') id: string,
     @Body() dto: UpdateUserDto,
-  ): Promise<Partial<User>> {
-    return semSenha(await this.usersService.update(id, dto));
+  ): Promise<PublicUser> {
+    return toPublicUser(await this.usersService.update(id, dto));
   }
 
   @Delete(':id')
