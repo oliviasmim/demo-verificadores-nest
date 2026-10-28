@@ -18,7 +18,9 @@
     "test:cov": "jest --coverage",
     "audit": "npm audit --audit-level=high",
     "verify": "npm run lint && npm run typecheck && npm run build && npm run test:cov && npm run audit",
-    "format": "prettier --write \"src/**/*.ts\" \"test/**/*.ts\""
+    "format": "prettier --write \"src/**/*.ts\" \"test/**/*.ts\"",
+    "agents:test-hooks": "node .agents/hooks/testar-hooks.mjs",
+    "agents:sync": "node .agents/sync.mjs"
   },
   "dependencies": {
     "@nestjs/common": "^11.0.1",
