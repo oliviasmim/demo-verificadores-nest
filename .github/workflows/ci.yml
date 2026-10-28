@@ -1,0 +1,112 @@
+# CI da demo de Verificadores (base: aula15-verificadores/starter/ci-workflow/ci.yml).
+#
+# Contrato com o package.json: lint, typecheck, build, test:cov e audit.
+# Node 22 em todos os jobs (o desenvolvimento local também roda em Node mais novo).
+# Cada job é um "sensor" independente; a branch protection exige todos verdes.
+
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+# Permissão mínima: os jobs só leem o repositório. Se um job precisar de mais,
+# ele pede explicitamente.
+permissions:
+  contents: read
+
+jobs:
+  lint:
+    name: Lint
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-node@v7
+        with:
+          node-version: "22"
+          cache: "npm"
+      - run: npm ci
+      - run: npm run lint
+
+  typecheck:
+    name: Type check
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-node@v7
+        with:
+          node-version: "22"
+          cache: "npm"
+      - run: npm ci
+      - run: npm run typecheck
+
+  build:
+    name: Build
+    runs-on: ubuntu-latest
+    # Só builda se passou lint e type check — não gasta minuto de runner
+    # buildando código que já sabemos que tem problema.
+    needs: [lint, typecheck]
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-node@v7
+        with:
+          node-version: "22"
+          cache: "npm"
+      - run: npm ci
+      - run: npm run build
+
+  test:
+    name: Test
+    runs-on: ubuntu-latest
+    needs: [lint, typecheck]
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-node@v7
+        with:
+          node-version: "22"
+          cache: "npm"
+      - run: npm ci
+      # test:cov roda unit + e2e e falha se a cobertura global ficar abaixo de 80%
+      # (coverageThreshold no package.json). Cobertura é piso, não prova de qualidade.
+      - run: npm run test:cov
+      # always(): sobe o relatório mesmo quando o threshold falha, para dar
+      # para ver quais arquivos ficaram sem cobertura.
+      - uses: actions/upload-artifact@v7
+        if: always()
+        with:
+          name: coverage
+          path: coverage/
+          retention-days: 7
+
+  dependency-audit:
+    name: "Dependency check: vulnerabilidade conhecida (npm audit)"
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-node@v7
+        with:
+          node-version: "22"
+          cache: "npm"
+      - run: npm ci
+      # "npm run audit" = npm audit --audit-level=high: falha o job se existir
+      # vulnerabilidade "high" ou "critical". moderate/low ficam no relatório.
+      - run: npm run audit
+
+  # Só roda em Pull Request (compara o que o PR está ADICIONANDO de dependência
+  # contra o que já existe na base). Exige "Dependency graph" habilitado no
+  # repositório (Settings → Security → veja branch-protection-guia.md) e, em
+  # repositório PRIVADO, exige GitHub Advanced Security — não roda de graça
+  # em repo privado. Ver branch-protection-guia.md, seção 4.
+  dependency-review:
+    name: "Dependency check: revisão do PR (dependency-review-action)"
+    if: github.event_name == 'pull_request'
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/dependency-review-action@v5
+        with:
+          fail-on-severity: high
