@@ -2,6 +2,7 @@ import {
   Body,
   Controller,
   Delete,
+  ForbiddenException,
   Get,
   HttpCode,
   Param,
@@ -45,7 +46,10 @@ export class UsersController {
 
   @Delete(':id')
   @HttpCode(204)
-  remove(@Param('id') id: string): void {
+  remove(@Param('id') id: string, @Req() req: AuthenticatedRequest): void {
+    if (req.user.id !== id) {
+      throw new ForbiddenException('Você só pode apagar a sua própria conta');
+    }
     this.usersService.remove(id);
   }
 }
