@@ -15,29 +15,39 @@ import { UpdateUserDto } from './dto/update-user.dto';
 import { User } from './user.entity';
 import { UsersService } from './users.service';
 
+// Nunca devolver o hash da senha: toda resposta com usuário passa por aqui.
+function semSenha(user: User): Partial<User> {
+  const publico: Partial<User> = { ...user };
+  delete publico.passwordHash;
+  return publico;
+}
+
 @UseGuards(JwtAuthGuard)
 @Controller('users')
 export class UsersController {
   constructor(private readonly usersService: UsersService) {}
 
   @Get()
-  findAll(): User[] {
-    return this.usersService.findAll();
+  findAll(): Partial<User>[] {
+    return this.usersService.findAll().map(semSenha);
   }
 
   @Get('me')
-  me(@Req() req: AuthenticatedRequest): User {
-    return this.usersService.findOne(req.user.id);
+  me(@Req() req: AuthenticatedRequest): Partial<User> {
+    return semSenha(this.usersService.findOne(req.user.id));
   }
 
   @Get(':id')
-  findOne(@Param('id') id: string): User {
-    return this.usersService.findOne(id);
+  findOne(@Param('id') id: string): Partial<User> {
+    return semSenha(this.usersService.findOne(id));
   }
 
   @Patch(':id')
-  update(@Param('id') id: string, @Body() dto: UpdateUserDto): Promise<User> {
-    return this.usersService.update(id, dto);
+  async update(
+    @Param('id') id: string,
+    @Body() dto: UpdateUserDto,
+  ): Promise<Partial<User>> {
+    return semSenha(await this.usersService.update(id, dto));
   }
 
   @Delete(':id')
