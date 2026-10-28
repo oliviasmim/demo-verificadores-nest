@@ -1,4 +1,8 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import {
+  ConflictException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import * as bcrypt from 'bcryptjs';
 import { randomUUID } from 'node:crypto';
 import { CreateUserDto } from './dto/create-user.dto';
@@ -13,6 +17,9 @@ export class UsersService {
   constructor(private readonly repository: UsersRepository) {}
 
   async create(dto: CreateUserDto): Promise<User> {
+    if (this.repository.findByEmail(dto.email)) {
+      throw new ConflictException('E-mail já cadastrado');
+    }
     const passwordHash = await bcrypt.hash(dto.password, BCRYPT_ROUNDS);
     return this.repository.insert({
       id: randomUUID(),
