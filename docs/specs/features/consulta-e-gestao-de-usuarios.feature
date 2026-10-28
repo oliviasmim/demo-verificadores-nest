@@ -43,7 +43,8 @@ Funcionalidade: Consulta e gestão de usuários
     E GET /users/{idAna} devolve 404
 
   # ---------------------------------------------------------------------
-  # PENDENTES (viram teste na aula 15)
+  # Implementado na aula 15
+  # Teste: test/bdd/a-senha-nunca-aparece-nas-respostas-da-api.e2e-spec.ts
   # ---------------------------------------------------------------------
 
   Cenário: a senha nunca aparece nas respostas da API
@@ -53,6 +54,7 @@ Funcionalidade: Consulta e gestão de usuários
     E o corpo não contém o campo "password"
     E o corpo não contém o campo "passwordHash"
 
+  # Teste: test/bdd/usuario-nao-pode-apagar-a-conta-de-outra-pessoa.e2e-spec.ts
   Cenário: usuário não pode apagar a conta de outra pessoa
     Dado que Ana e Bruno estão cadastrados
     E que Bruno está autenticado

@@ -1,6 +1,6 @@
-# Testes dos cenários BDD pendentes
+# Testes dos cenários BDD
 
-Aqui entram os testes dos cenários marcados como **pendentes** em
+Aqui ficam os testes dos cenários da aula 15 (antes marcados como pendentes) em
 [`docs/specs/SPEC-usuarios-autenticacao.md`](../../docs/specs/SPEC-usuarios-autenticacao.md).
 
 Regras da pasta:

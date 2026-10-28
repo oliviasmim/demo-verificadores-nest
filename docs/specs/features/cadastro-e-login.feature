@@ -34,7 +34,8 @@ Funcionalidade: Cadastro e login de usuários
     E a mensagem é "Credenciais inválidas"
 
   # ---------------------------------------------------------------------
-  # PENDENTE (vira teste na aula 15)
+  # Implementado na aula 15
+  # Teste: test/bdd/cadastro-com-email-ja-cadastrado-e-recusado.e2e-spec.ts
   # ---------------------------------------------------------------------
 
   Cenário: cadastro com e-mail já cadastrado é recusado

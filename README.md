@@ -7,8 +7,11 @@ funcionam como **sensores** que dizem se o código está pronto, sem depender
 da palavra de quem escreveu.
 
 A especificação (requisitos EARS e cenários BDD) está em
-[`docs/specs/`](./docs/specs/). Há **cenários pendentes** descritos na spec,
-que ainda não viraram teste: eles são o material do exercício da aula.
+[`docs/specs/`](./docs/specs/). Os três cenários que eram
+pendentes (e-mail duplicado, senha fora das respostas, apagar conta alheia)
+já viraram teste em [`test/bdd/`](./test/bdd/); o histórico do ciclo
+red/green/refactor está em `LOG-RED-GREEN-REFACTOR-<n>.md` e o resumo em
+[`ENTREGA.md`](./ENTREGA.md).
 
 ## Como rodar
 
@@ -68,10 +71,10 @@ Em [`postman/`](./postman/):
    `0. Setup` (cadastra e loga Ana e Bruno, guarda tokens e ids),
    `1. Auth`, `2. Usuários (CRUD)` e `3. Cenários BDD`.
 
-A pasta `3. Cenários BDD` tem uma subpasta por cenário pendente da spec, com
+A pasta `3. Cenários BDD` tem uma subpasta por cenário da aula 15, com
 `pm.test` nomeados com a frase do cenário e verificando o comportamento
-**esperado**. Enquanto o cenário não for implementado, esses testes falham, e é
-isso que a pasta serve para mostrar. Rode-a por último: o cenário de apagar
+**esperado**. Na versão sem a implementação (branch `main`) esses testes falham;
+nesta branch devem ficar verdes. Rode-a por último: o cenário de apagar
 conta altera dados.
 
 Pela linha de comando:
@@ -85,7 +88,7 @@ src/
   auth/               registro, login, JwtStrategy, JwtAuthGuard
   users/              entidade, repositório em memória, service, controller
 test/                 e2e com supertest contra o AppModule real
-test/bdd/             testes dos cenários BDD pendentes (um arquivo por cenário)
+test/bdd/             testes dos cenários BDD da aula 15 (um arquivo por cenário)
 docs/specs/           spec em Markdown e arquivos .feature
 postman/              coleção e ambiente
 ```

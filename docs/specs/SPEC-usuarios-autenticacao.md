@@ -36,11 +36,11 @@ validada na borda (`ValidationPipe` com `whitelist` e `forbidNonWhitelisted`).
 | 4 | Estado | Enquanto a requisição não trouxer um token válido, o sistema deve responder 401 em todas as rotas de `/users`. |
 | 5 | Opcional | Onde o `JWT_SECRET` estiver definido no ambiente, o sistema deve usá-lo para assinar e validar tokens. |
 | 6 | Indesejado | Se o e-mail ou a senha do login estiverem errados, então o sistema deve responder 401 com a mesma mensagem "Credenciais inválidas". |
-| 7 | Indesejado | Se o e-mail do cadastro já existir, então o sistema deve recusar com 409. **(pendente)** |
-| 8 | Ubíquo | O sistema não deve incluir `password` nem `passwordHash` em nenhuma resposta. **(pendente)** |
-| 9 | Indesejado | Se um usuário tentar apagar a conta de outra pessoa, então o sistema deve responder 403 e manter a conta. **(pendente)** |
+| 7 | Indesejado | Se o e-mail do cadastro já existir, então o sistema deve recusar com 409. **(implementado, ver cenário abaixo)** |
+| 8 | Ubíquo | O sistema não deve incluir `password` nem `passwordHash` em nenhuma resposta. **(implementado, ver cenário abaixo)** |
+| 9 | Indesejado | Se um usuário tentar apagar a conta de outra pessoa, então o sistema deve responder 403 e manter a conta. **(implementado, ver cenário abaixo)** |
 
-## Cenários (BDD) — já implementados e testados
+## Cenários (BDD) — implementados e testados
 
 ```gherkin
 Funcionalidade: Cadastro e login de usuários
@@ -121,12 +121,17 @@ Funcionalidade: Consulta e gestão de usuários
     E GET /users/{idAna} devolve 404
 ```
 
-## Cenários pendentes (viram teste na aula 15)
+## Cenários da aula 15 — implementados (antes pendentes)
 
-> Estes três cenários estão **descritos e ainda sem teste automatizado**.
-> Cada um vira um arquivo em [`test/bdd/`](../../test/bdd/) e passa pelo ciclo
-> red, green, refactor. Há uma coleção Postman (pasta `3. Cenários BDD`) que
-> exercita os três contra o servidor rodando.
+> Estes três cenários estavam descritos sem teste. Cada um virou um arquivo em
+> [`test/bdd/`](../../test/bdd/) e passou pelo ciclo red, green, refactor
+> (ver `LOG-RED-GREEN-REFACTOR-<n>.md` na raiz).
+
+| Cenário | Critério | Teste |
+|---|---|---|
+| cadastro com e-mail já cadastrado é recusado | 7 | [`cadastro-com-email-ja-cadastrado-e-recusado.e2e-spec.ts`](../../test/bdd/cadastro-com-email-ja-cadastrado-e-recusado.e2e-spec.ts) |
+| a senha nunca aparece nas respostas da API | 8 | [`a-senha-nunca-aparece-nas-respostas-da-api.e2e-spec.ts`](../../test/bdd/a-senha-nunca-aparece-nas-respostas-da-api.e2e-spec.ts) |
+| usuário não pode apagar a conta de outra pessoa | 9 | [`usuario-nao-pode-apagar-a-conta-de-outra-pessoa.e2e-spec.ts`](../../test/bdd/usuario-nao-pode-apagar-a-conta-de-outra-pessoa.e2e-spec.ts) |
 
 ```gherkin
 Funcionalidade: Cadastro e login de usuários
@@ -158,7 +163,7 @@ Funcionalidade: Consulta e gestão de usuários
 
 - `npm run verify` passa (lint, tipos, build, testes com cobertura e audit).
 - Cada cenário desta spec tem um teste cujo nome é a frase do `Cenário:`.
-- A pasta `3. Cenários BDD` da coleção Postman fica toda verde.
+- A pasta `3. Cenários BDD` da coleção Postman fica toda verde (agora que os três cenários estão implementados).
 
 ## Linguagem ubíqua
 
