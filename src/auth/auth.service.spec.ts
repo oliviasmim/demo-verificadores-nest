@@ -19,13 +19,18 @@ describe('AuthService', () => {
   });
 
   it('login retorna token', async () => {
-    const authService = {
-      login: () => Promise.resolve({ access_token: 'token-falso' }),
-    };
+    await service.register(ana);
 
-    const resultado = await authService.login();
+    const resultado = await service.login({
+      email: ana.email,
+      password: ana.password,
+    });
 
-    expect(resultado.access_token).toBe('token-falso');
+    // Um JWT de verdade (3 partes) e assinado com o segredo do JwtService real
+    expect(resultado.access_token.split('.')).toHaveLength(3);
+    await expect(
+      jwtService.verifyAsync(resultado.access_token),
+    ).resolves.toBeDefined();
   });
 
   it('registra o usuário e devolve os dados cadastrados', async () => {
