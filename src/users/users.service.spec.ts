@@ -1,4 +1,5 @@
 import { NotFoundException } from '@nestjs/common';
+import * as bcrypt from 'bcryptjs';
 import { UsersRepository } from './users.repository';
 import { UsersService } from './users.service';
 
@@ -18,7 +19,13 @@ describe('UsersService', () => {
   it('cria usuário com senha protegida', async () => {
     const user = await service.create(dadosAna);
 
-    expect(user.passwordHash).toBeDefined();
+    // Nunca em texto puro...
+    expect(user.passwordHash).not.toBe(dadosAna.password);
+    // ...e é um hash bcrypt que confere com a senha original (e só com ela).
+    expect(await bcrypt.compare(dadosAna.password, user.passwordHash)).toBe(
+      true,
+    );
+    expect(await bcrypt.compare('outra-senha', user.passwordHash)).toBe(false);
   });
 
   it('cria usuário com id, nome e e-mail informados', async () => {
