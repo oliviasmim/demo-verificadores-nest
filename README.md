@@ -53,6 +53,8 @@ Sem token, todas as rotas de `/users` respondem 401.
 | `npm run test:cov` | Jest com cobertura, piso global de 80% | código que nenhum teste executa |
 | `npm run audit` | `npm audit --audit-level=high` | dependência com vulnerabilidade conhecida (high/critical) |
 | `npm run verify` | todos acima em sequência | o "pronto" completo, igual ao CI |
+| `npm run agents:test-hooks` | testa os hooks do setup de IA | hook que deixou de bloquear |
+| `npm run agents:sync` | copia `.agents/` para `.claude/` sem symlink | (Windows) agentes invisíveis |
 | `npm start` / `start:dev` | sobe a API | (não é sensor) |
 
 O CI (`.github/workflows/ci.yml`) roda os mesmos sensores em jobs separados e
@@ -88,7 +90,24 @@ test/                 e2e com supertest contra o AppModule real
 test/bdd/             testes dos cenários BDD pendentes (um arquivo por cenário)
 docs/specs/           spec em Markdown e arquivos .feature
 postman/              coleção e ambiente
+AGENTS.md             instruções para agentes (CLAUDE.md importa este)
+.agents/              skills, agents e hooks; .claude/ aponta para cá
 ```
+
+## Setup de IA
+
+- [`AGENTS.md`](./AGENTS.md): instruções do projeto para qualquer agente (comandos, convenções, definição de pronto, o que nunca fazer).
+- [`.agents/README.md`](./.agents/README.md): skills, subagentes e hooks.
+- [`docs/`](./docs/README.md): arquitetura, testes, verificadores, segurança e ADRs.
+
+Por que assim: o `AGENTS.md` é um padrão aberto, lido por várias ferramentas
+(Claude Code, Codex, Cursor), então é a fonte única; o `CLAUDE.md` só o
+importa. A pasta `.agents/` guarda skills, agentes e hooks sem amarrar a
+ferramenta, e `.claude/` apenas faz a ponte (symlinks e `settings.json`). Os
+**hooks** são verificadores determinísticos: bloqueiam `--no-verify`, `.skip`,
+queda de cobertura e "pronto" sem lint/tipos/testes verdes, e o agente não
+consegue "esquecer" deles, ao contrário de uma instrução escrita no
+`AGENTS.md`. Teste-os com `npm run agents:test-hooks`.
 
 ## Por que essas escolhas
 
