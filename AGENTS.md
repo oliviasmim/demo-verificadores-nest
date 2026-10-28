@@ -3,8 +3,8 @@
 API NestJS 11 de usuários com login JWT (bcryptjs), repositório em memória e
 testes com Jest. Repositório demo da aula "Verificadores": o "pronto" vem de
 sensores (lint, tipos, build, testes, cobertura, audit), não da palavra de
-quem escreveu. A spec (EARS + BDD) está em `docs/specs/`; ela descreve
-cenários ainda **pendentes** de teste.
+quem escreveu. A spec (EARS + BDD) está em `docs/specs/`; cada cenário tem
+um teste com o mesmo nome (os de segurança em `test/bdd/`).
 
 ## Comandos
 

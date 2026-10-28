@@ -1,8 +1,7 @@
 # Segurança da API
 
-Regras que o código deve respeitar. A coluna **Estado** separa o que já faz
-parte do comportamento verificado do que a spec **exige e ainda tem cenário
-pendente** (ver [`specs/`](./specs/)).
+Regras que o código deve respeitar. A coluna **Estado** diz onde cada regra é
+verificada (ver [`specs/`](./specs/)).
 
 | # | Regra | Estado |
 |---|---|---|
@@ -10,14 +9,14 @@ pendente** (ver [`specs/`](./specs/)).
 | 2 | Login recusado devolve **sempre** 401 `Credenciais inválidas`, para e-mail inexistente e para senha errada | em vigor (critério 6) |
 | 3 | `JWT_SECRET` vem do ambiente; o fallback fixo é só para desenvolvimento local | em vigor (critério 5) |
 | 4 | Todas as rotas de `/users` exigem token válido (401 sem ele) | em vigor (critério 4) |
-| 5 | Nenhuma resposta inclui `password` nem `passwordHash` | exigido pela spec (cenário pendente) |
-| 6 | Só o dono da conta apaga a própria conta (403 para outra pessoa) | exigido pela spec (cenário pendente) |
-| 7 | Cadastro com e-mail já existente é recusado com 409 | exigido pela spec (cenário pendente) |
+| 5 | Nenhuma resposta inclui `password` nem `passwordHash` | em vigor — `test/bdd/a-senha-nunca-aparece-nas-respostas-da-api.e2e-spec.ts` |
+| 6 | Só o dono da conta apaga a própria conta (403 para outra pessoa) | em vigor — `test/bdd/usuario-nao-pode-apagar-a-conta-de-outra-pessoa.e2e-spec.ts` |
+| 7 | Cadastro com e-mail já existente é recusado com 409 | em vigor — `test/bdd/cadastro-com-email-ja-cadastrado-e-recusado.e2e-spec.ts` |
 | 8 | `PATCH /users/:id` também deveria recusar edição da conta alheia | candidato a cenário futuro (ver "Fora de escopo" da spec) |
 
-Para as regras 5, 6 e 7, o caminho é o ciclo BDD (skill `bdd-para-teste`):
-teste vermelho primeiro, implementação depois. Não trate como pronto o que a
-spec marca como pendente.
+As regras 5, 6 e 7 entraram pelo ciclo BDD (skill `bdd-para-teste`): teste
+vermelho primeiro, implementação depois — ver `LOG-RED-GREEN-REFACTOR-{1,2,3}.md`.
+A regra 8 é o próximo cenário a seguir o mesmo caminho.
 
 ## Detalhes por regra
 

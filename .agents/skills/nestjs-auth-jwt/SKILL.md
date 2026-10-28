@@ -83,9 +83,9 @@ Teste com ausência: `expect(body).not.toHaveProperty('passwordHash')`.
 
 ## Cuidado com o que a spec ainda não cobre
 
-Os critérios 7, 8 e 9 de `docs/specs/SPEC-usuarios-autenticacao.md` estão
-marcados como pendentes. Se o pedido tocar neles, trate como comportamento novo:
-pelo ciclo da skill `bdd-para-teste`, teste vermelho antes.
+Checagem de dono no `PATCH /users/:id` ainda não existe (está em "Fora de
+escopo" da spec). Se o pedido tocar nisso, trate como comportamento novo: pelo
+ciclo da skill `bdd-para-teste`, cenário na spec e teste vermelho antes.
 
 ## Exemplo de invocação
 
