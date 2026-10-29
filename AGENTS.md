@@ -82,3 +82,22 @@ Commits em português, conventional commits (`test:`, `feat:`, `fix:`, `refactor
   `bdd-para-teste`, `caca-teste-inutil`, `verificar-antes-de-pronto`.
 - Agents (`.agents/agents/`): `revisor-de-seguranca`, `cetico-de-testes`, `tradutor-bdd`.
 - Hooks (`.agents/hooks/`, ativos no Claude Code): ver `.agents/README.md`.
+
+
+### Starting large tasks
+
+When exiting plan mode with an accepted plan:
+
+1. Create the task directory: `mkdir -p .agents/specs/active/[task-name]/`
+2. Create documents: `[task-name]-plan.md` (the accepted plan), `[task-name]-context.md` (key files, decisions), `[task-name]-tasks.md` (checklist of work)
+3. Update regularly: mark tasks complete immediately
+
+### Continuing tasks
+
+- Check `.agents/specs/active/` for existing tasks
+- Read all three files before proceeding
+- Update "Last Updated" timestamps
+
+### Finishing tasks
+
+- Move the task directory to `.agents/specs/archive/`
