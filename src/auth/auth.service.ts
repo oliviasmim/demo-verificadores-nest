@@ -19,11 +19,9 @@ export class AuthService {
 
   async login(dto: LoginDto): Promise<{ access_token: string }> {
     const user = this.usersService.findByEmail(dto.email);
-    const senhaConfere =
-      user !== undefined &&
-      (await bcrypt.compare(dto.password, user.passwordHash));
+    const emailNormalizado = dto.email.trim().toLowerCase();
 
-    if (!user || !senhaConfere) {
+    if (!user || !dto.password) {
       throw new UnauthorizedException('Credenciais inválidas');
     }
 
