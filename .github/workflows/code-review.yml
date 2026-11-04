@@ -1,0 +1,57 @@
+# Revisão de código por IA em Pull Request (Groq, plano gratuito).
+#
+# NÃO é um sensor: é opinião, não sinal determinístico. Por isso fica fora do
+# ci.yml e NÃO deve entrar na lista de checks obrigatórios da branch
+# protection. Ela comenta no PR; quem decide é a pessoa revisora.
+#
+# As instruções do revisor vivem em .agents/agents/revisor-de-codigo.md (a
+# mesma definição usada localmente como subagente), para não divergir.
+# O script .github/scripts/revisao-groq.mjs manda essas instruções + o diff
+# para a API do Groq e publica UM comentário no PR (atualizado a cada push).
+#
+# Requer o secret GROQ_API_KEY (Settings → Secrets and variables → Actions).
+# Opcional: variável GROQ_MODEL (padrão openai/gpt-oss-120b).
+
+name: Code review (IA)
+
+on:
+  pull_request:
+    branches: [main]
+    types: [opened, synchronize, ready_for_review, reopened]
+
+# Um push novo cancela a revisão anterior do mesmo PR (economiza a cota).
+concurrency:
+  group: code-review-${{ github.event.pull_request.number }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  review:
+    name: Revisor de código (IA, consultivo)
+    # Pula rascunhos e PRs de fork (fork não recebe secrets).
+    if: >-
+      github.event.pull_request.draft == false &&
+      github.event.pull_request.head.repo.full_name == github.repository
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    permissions:
+      contents: read
+      pull-requests: write
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          # Histórico completo para o diff base...head do PR.
+          fetch-depth: 0
+      - uses: actions/setup-node@v7
+        with:
+          node-version: "22"
+      - run: node .github/scripts/revisao-groq.mjs
+        env:
+          GROQ_API_KEY: ${{ secrets.GROQ_API_KEY }}
+          GROQ_MODEL: ${{ vars.GROQ_MODEL }}
+          GITHUB_TOKEN: ${{ github.token }}
+          PR_NUMBER: ${{ github.event.pull_request.number }}
+          BASE_SHA: ${{ github.event.pull_request.base.sha }}
+          HEAD_SHA: ${{ github.event.pull_request.head.sha }}

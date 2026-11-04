@@ -18,6 +18,11 @@ No CI há ainda a `dependency-review` (só em PR), que compara as dependências
 adicionadas pelo PR. `npm run verify` encadeia os cinco sensores, na ordem do
 quadro.
 
+Em PR roda também o workflow `code-review.yml`: o subagente
+`revisor-de-codigo` (`.agents/agents/`) revisa o diff e comenta. Ele **não é
+sensor** (é opinião, não sinal determinístico), então não entra nos checks
+obrigatórios da branch protection. Usa a API do Groq (secret `GROQ_API_KEY`).
+
 Nenhum sensor lê a **spec**. Cenário BDD sem teste não faz nenhum deles
 falhar: é preciso procurar (ver `docs/specs/`) e escrever o teste.
 

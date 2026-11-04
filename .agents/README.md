@@ -30,7 +30,8 @@ Hooks são *verificadores*: bloqueiam, perguntam ou devolvem erro de verdade.
 
 ### Agents
 
-`revisor-de-seguranca` (só leitura), `cetico-de-testes` (quebra o código de
+`revisor-de-codigo` (só leitura; também roda em PR via
+`.github/workflows/code-review.yml`), `revisor-de-seguranca` (só leitura), `cetico-de-testes` (quebra o código de
 propósito e sempre restaura), `tradutor-bdd` (escreve só o teste RED).
 
 ### Hooks

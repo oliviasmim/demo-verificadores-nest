@@ -80,5 +80,6 @@ Commits em português, conventional commits (`test:`, `feat:`, `fix:`, `refactor
 - Docs: `docs/README.md` (arquitetura, testes, verificadores, segurança, ADRs).
 - Skills (`.agents/skills/`): `nestjs-recurso`, `nestjs-auth-jwt`, `nestjs-testes`,
   `bdd-para-teste`, `caca-teste-inutil`, `verificar-antes-de-pronto`.
-- Agents (`.agents/agents/`): `revisor-de-seguranca`, `cetico-de-testes`, `tradutor-bdd`.
+- Agents (`.agents/agents/`): `revisor-de-codigo`, `revisor-de-seguranca`, `cetico-de-testes`, `tradutor-bdd`.
+  O `revisor-de-codigo` também roda em todo PR (`.github/workflows/code-review.yml`), só comentando.
 - Hooks (`.agents/hooks/`, ativos no Claude Code): ver `.agents/README.md`.
